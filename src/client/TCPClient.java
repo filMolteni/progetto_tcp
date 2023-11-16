@@ -1,79 +1,77 @@
 package client;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
-public class TCPClient extends JFrame {
-    private JButton[] columnButtons;
-    private JLabel[][] matrixLabels; // Matrice di etichette per rappresentare la griglia
-    private Socket socket;
-
-    public TCPClient(Socket socket) {
-        this.socket = socket;
-        setTitle("Forza 4");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(7, 7)); // 7 righe x 7 colonne
-
-        columnButtons = new JButton[7]; // Array di bottoni per le colonne
-        matrixLabels = new JLabel[6][7]; // Matrice di etichette 6x7 per rappresentare la griglia
-
-        for (int i = 0; i < 7; i++) {
-            columnButtons[i] = new JButton("Colonna " + (i + 1));
-            add(columnButtons[i]);
-
-            final int colonnaSelezionata = i;
-            columnButtons[i].addActionListener(new ActionListener() {
+public class TCPClient {
+    
+        public  GUI gui;
+    
+        public TCPClient(GUI gui) {
+            this.gui = gui;
+            // ... altre inizializzazioni ...
+        }
+        public void comunicazioneServer(int colonna, Color colore) {
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    inviaMossaAlServer(colonnaSelezionata);
+                protected Void doInBackground() throws Exception {
+                    try {
+                        String serverAddress = "localhost";
+                        int serverPort = 12345;
+    
+                        Socket clientSocket = new Socket(serverAddress, serverPort);
+                        OutputStream outputStream = clientSocket.getOutputStream();
+                        String messageToSend = colonna + ";X";
+                        PrintWriter p = new PrintWriter(outputStream, true);
+    
+                        p.println(messageToSend);
+    
+                        InputStream input = clientSocket.getInputStream();
+                        InputStreamReader reader = new InputStreamReader(input);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
+    
+                        String serverMessage;
+                        System.out.println("attesa messaggio");
+                        while ((serverMessage = bufferedReader.readLine()) != null) {
+                            System.out.println("Received message from server: " + serverMessage);
+                            String[] parts = serverMessage.split(";");
+                            int riga = Integer.parseInt(parts[0]);
+                            int colon = Integer.parseInt(parts[1]);
+                            System.out.println("riga: " + riga);
+                            System.out.println("colonna: " + colon);
+    
+                            // Aggiorna l'interfaccia utente nell'Event Dispatch Thread
+                            SwingUtilities.invokeLater(() -> {
+                                gui.disegnaCerchio(gui.matrixLabels[riga][colon], Color.RED);
+                            });
+                        }
+    
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
+            };
+    
+            worker.execute();
+        }
+
+        public static void main(String[] args) {
+            GUI gui = new GUI();
+            TCPClient tcpClient = new TCPClient(gui);
+            gui.setTCPClient(tcpClient);
+    
+            SwingUtilities.invokeLater(() -> {
+                //new GUI();
             });
         }
-
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
-                matrixLabels[row][col] = new JLabel(" ");
-                matrixLabels[row][col].setHorizontalAlignment(SwingConstants.CENTER);
-                matrixLabels[row][col].setFont(new Font("Arial", Font.BOLD, 24));
-                add(matrixLabels[row][col]);
-            }
-        }
-
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    private void inviaMossaAlServer(int colonna) {
-        try {
-            String serverAddress = "localhost";
-            int serverPort = 12345;
-
-            Socket clientSocket = new Socket(serverAddress, serverPort);
-            OutputStream outputStream = clientSocket.getOutputStream();
-            String messageToSend = colonna + ";X"; // Esempio di messaggio con colonna selezionata e simbolo "X"
-            byte[] sendData = messageToSend.getBytes();
-            outputStream.write(sendData);
-            outputStream.flush();
-
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        Socket socket = null; // Inizializza il socket del client
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new TCPClient(socket);
-            }
-        });
-    }
+    
 }

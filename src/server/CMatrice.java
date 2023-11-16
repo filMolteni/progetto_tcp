@@ -90,4 +90,13 @@ public class CMatrice {
         return s;
     }
 
+    public int getRigaInserimento(int colonna) {
+        for (int riga = righe - 1; riga >= 0; riga--) {
+            if (tavola[riga][colonna] == ' ') {
+                return riga;
+            }
+        }
+        return -1; // La colonna è piena
+    }
+
 }
