@@ -1,4 +1,4 @@
-package client;
+package client2;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -11,10 +11,10 @@ import java.net.Socket;
 
 public class TCPClient {
 
-    //client1
-    public char pezzo = 'X';
-    Color colore = Color.RED ;
-    int serverPort = 12345;
+    //client2
+    public char pezzo = 'O';
+    Color colore = Color.YELLOW ;
+    int serverPort = 54321;
 
     public GUI gui;
     public TCPClient(GUI gui) {

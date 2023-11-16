@@ -1,75 +1,84 @@
 package server;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TCPServer {
+    public static int i;
+    static CMatrice m = new CMatrice(6, 7);
     public static void main(String[] args) {
-        int port = 12345;
-        int portclient=12346;
-        CMatrice m = new CMatrice(6, 7);
+        int port1 = 12345;
+        int port2 = 54321;
+
+        System.out.println("Server in ascolto sulla porta " + port1 + " e " + port2);
+
+        new Thread(() -> comunicazioneClient(port1)).start();
+        new Thread(() -> comunicazioneClient(port2)).start();
+    }
+
+    static void comunicazioneClient(int port) {
+       
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server in ascolto sulla porta " + port);
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                
                 System.out.println("Nuova connessione da: " + clientSocket.getInetAddress());
 
-                // Creazione dei canali di input 
-                InputStream input = clientSocket.getInputStream();
-                InputStreamReader reader = new InputStreamReader(input);
-                BufferedReader bufferedReader = new BufferedReader(reader);
-               
+                try {
+                    InputStream input = clientSocket.getInputStream();
+                    InputStreamReader reader = new InputStreamReader(input);
+                    BufferedReader bufferedReader = new BufferedReader(reader);
 
-                String clientMessage;
-                while ((clientMessage = bufferedReader.readLine()) != null) {
-                    System.out.println("Received message from client: " + clientMessage);
+                    System.out.println("Attesa messaggio client");
 
-                    // You can process the received message here as needed
-                    String[] parts = clientMessage.split(";");
+                    String clientMessage;
+                    while ((clientMessage = bufferedReader.readLine()) != null) {
+                        System.out.println("Received message from client: " + clientMessage);
 
-                    if (parts.length == 2) {
-                        int colonna = Integer.parseInt(parts[0]);
-                        char pezzo = parts[1].charAt(0);
+                        String[] parts = clientMessage.split(";");
 
-                        int riga = m.getRigaInserimento(colonna);
-                        if (riga >= 0) {
-                            boolean isInserito = m.inserisciPezzo(colonna, pezzo);
-                            if (isInserito) {
-                                System.out.println("Inserimento effettuato nella colonna " + colonna + " alla riga " + riga);
-                                // Invia la riga al client
-                                // OutputStream output = clientSocket.getOutputStream();
-                                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-                                // byte[] sendData = Integer.toString(riga).getBytes();
-                                String messaaggio= Integer.toString(riga) + ";"+colonna;
-                                output.println(messaaggio );
-                                output.flush();
+                        if (parts.length == 2) {
+                            int colonna = Integer.parseInt(parts[0]);
+                            char pezzo = parts[1].charAt(0);
+
+                            int riga = m.getRigaInserimento(colonna);
+                            if (riga >= 0) {
+                                boolean isInserito = m.inserisciPezzo(colonna, pezzo);
+                                if (isInserito) {
+                                    i++;
+                                    System.out.println(
+                                            "Inserimento effettuato nella colonna " + colonna + " alla riga " + riga);
+                                    PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
+                                    String messaggio = Integer.toString(riga) + ";" + colonna;
+                                    output.println(messaggio);
+                                    output.flush();
+                                } else {
+                                    System.out.println("Colonna piena, riprova");
+                                }
                             } else {
-                                System.out.println("Colonna piena, riprova");
+                                System.out.println("Colonna non valida, riprova");
                             }
-                        } else {
-                            System.out.println("Colonna non valida, riprova");
+
+                            System.out.print(m.stampaMatrice());
+                            if (m.controllaVittoria(pezzo)) {
+                                System.out.print("Vittoria");
+                                break;
+                            }
                         }
 
-                        System.out.print(m.stampaMatrice());
-                        if (m.controllaVittoria(pezzo)) {
-                            System.out.print("vittoria");
-                            break;
-                        }
+                        break;
                     }
-
-                  
+                } finally {
+                    // Chiusura della connessione
+                    clientSocket.close();
                 }
-
-                // Chiusura della connessione
-                clientSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
