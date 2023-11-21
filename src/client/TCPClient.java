@@ -66,6 +66,13 @@ public class TCPClient {
 
                             // Elabora il messaggio successivo, ad esempio, aggiorna l'interfaccia utente
                             System.out.println("MESSEGGIO IMPORTANTE: " + nextMessage);
+                            String[] parts2 = nextMessage.split(";");
+                            int riga2 = Integer.parseInt(parts[0]);
+                            int colon2 = Integer.parseInt(parts[1]);
+
+                        SwingUtilities.invokeLater(() -> {
+                            gui.disegnaCerchio(gui.matrixLabels[riga2][colon2], colore2);
+                        });
                             
                         }
                     }
@@ -81,10 +88,7 @@ public class TCPClient {
 
         worker.execute();
     }
-    public void SecondaComunicazioneServer(){
-        
-    }
-
+    
     public static void main(String[] args) {
         GUI gui = new GUI();
         TCPClient tcpClient = new TCPClient(gui);

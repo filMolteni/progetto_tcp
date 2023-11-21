@@ -56,11 +56,12 @@ public class TCPServer {
                                     boolean isInserito = m.inserisciPezzo(colonna, pezzo);
                                     if (isInserito) {
                                         i++;
+                                         System.out.println(clientSocket.getPort());
                                         //System.out.println("Inserimento effettuato nella colonna " + colonna + " alla riga " + riga);
                                         PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-                                        System.out.println(6666);
+                                     
 
-                                        System.out.println(clientSocket.getPort());
+                                       
 
                                         String messaggio = Integer.toString(riga) + ";" + colonna;
                                         output.println(messaggio);
@@ -105,6 +106,7 @@ public class TCPServer {
 
     static void inviaAdaltroClient(int port, String messaggio) {
         try {
+            
             Socket clientSocket = new Socket("localhost", port);
             System.out.println("NUOVA CONNESSIONE DA: " + clientSocket.getInetAddress());
             System.out.println(port);
