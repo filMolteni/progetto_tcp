@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStream;   
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -55,10 +55,20 @@ public class TCPClient {
                         System.out.println("riga: " + riga);
                         System.out.println("colonna: " + colon);
     
-                        // Aggiorna l'interfaccia utente nell'Event Dispatch Thread
+                        // Aggiornamento l'interfaccia utente nell'Event Dispatch Thread
                         SwingUtilities.invokeLater(() -> {
                             gui.disegnaCerchio(gui.matrixLabels[riga][colon], colore);
                         });
+                         // Ciclo per leggere i messaggi successivi
+                        
+                         String nextMessage;
+                         while ((nextMessage = bufferedReader.readLine() )!= null) {
+                            //if (nextMessage == null || nextMessage.isEmpty()) {break;  }
+ 
+                             
+                             System.out.println("MESSEGGIO IMPORTANTE: " + nextMessage);
+                             // aggiornerò l'interfaccia utente ...
+                         }
                     }
     
                     // Non chiudere la connessione qui, lasciala aperta per futuri messaggi

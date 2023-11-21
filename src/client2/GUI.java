@@ -13,7 +13,7 @@ public class GUI extends JFrame {
 
     public GUI(TCPClient tcpClient) {
         this.tcpClient = tcpClient;
-        // ... altre inizializzazioni ...
+       
     }
 
     public GUI() {
@@ -57,7 +57,7 @@ public class GUI extends JFrame {
     }
 
     public void ridisegnaMatrice() {
-        // Rimuovi tutti gli elementi attualmente presenti nel layout
+        // Rimuovo tutti gli elementi attualmente presenti nel layout
         getContentPane().removeAll();
     
         // Aggiungi i nuovi pulsanti delle colonne
@@ -75,7 +75,7 @@ public class GUI extends JFrame {
             }
         }
     
-        // Rendi visibili le modifiche
+        // Rendo visibili le modifiche
         revalidate();
         repaint();
     }

@@ -14,6 +14,7 @@ public class TCPClient {
     //client1
     public char pezzo = 'X';
     Color colore = Color.RED ;
+    Color colore2 = Color.yellow ;
     int serverPort = 12345;
 
     public GUI gui;
@@ -28,40 +29,48 @@ public class TCPClient {
             protected Void doInBackground() throws Exception {
                 try {
                     String serverAddress = "localhost";
-                    
-    
-                    Socket clientSocket = new Socket(serverAddress, serverPort);
+
+                    //Socket clientSocket = new Socket(serverAddress, serverPort);
+                    Socket clientSocket = new Socket(serverAddress, 12345);
                     OutputStream outputStream = clientSocket.getOutputStream();
                     String messageToSend = colonna + ";" + pezzo;
                     PrintWriter p = new PrintWriter(outputStream, true);
-    
+
                     p.println(messageToSend);
-    
+
                     InputStream input = clientSocket.getInputStream();
                     InputStreamReader reader = new InputStreamReader(input);
                     BufferedReader bufferedReader = new BufferedReader(reader);
-    
+
                     while (true) {
                         String serverMessage = bufferedReader.readLine();
                         if (serverMessage == null) {
                             // Il server ha chiuso la connessione
                             break;
                         }
-    
-                        System.out.println("Received message from server: " + serverMessage);
+                        System.out.println("CLIENT 1:Received message from server: " + serverMessage);
+
                         String[] parts = serverMessage.split(";");
                         int riga = Integer.parseInt(parts[0]);
                         int colon = Integer.parseInt(parts[1]);
-                        System.out.println("riga: " + riga);
-                        System.out.println("colonna: " + colon);
-    
-                        // Aggiorna l'interfaccia utente nell'Event Dispatch Thread
+
                         SwingUtilities.invokeLater(() -> {
                             gui.disegnaCerchio(gui.matrixLabels[riga][colon], colore);
                         });
+
+                        // Ciclo per leggere i messaggi successivi
+                        
+                        String nextMessage;
+                        while ((nextMessage = bufferedReader.readLine() )!= null) {
+                           //if (nextMessage == null || nextMessage.isEmpty()) {break;  }
+
+                            // Elabora il messaggio successivo, ad esempio, aggiorna l'interfaccia utente
+                            System.out.println("MESSEGGIO IMPORTANTE: " + nextMessage);
+                            
+                        }
                     }
-    
-                    // Non chiudere la connessione qui, lasciala aperta per futuri messaggi
+
+                    
                     // clientSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -69,8 +78,11 @@ public class TCPClient {
                 return null;
             }
         };
-    
+
         worker.execute();
+    }
+    public void SecondaComunicazioneServer(){
+        
     }
 
     public static void main(String[] args) {
@@ -82,5 +94,7 @@ public class TCPClient {
             //new GUI();
         });
     }
+
+
 
 }

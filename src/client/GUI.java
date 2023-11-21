@@ -13,7 +13,7 @@ public class GUI extends JFrame {
 
     public GUI(TCPClient tcpClient) {
         this.tcpClient = tcpClient;
-        // ... altre inizializzazioni ...
+        
     }
 
     public GUI() {
@@ -57,15 +57,15 @@ public class GUI extends JFrame {
     }
 
     public void ridisegnaMatrice() {
-        // Rimuovi tutti gli elementi attualmente presenti nel layout
+        // Rimuovo tutti gli elementi attualmente presenti nel layout
         getContentPane().removeAll();
     
-        // Aggiungi i nuovi pulsanti delle colonne
+        // Aggiungo i nuovi pulsanti delle colonne
         for (int i = 0; i < 7; i++) {
             add(columnButtons[i]);
         }
     
-        // Aggiungi i nuovi label della matrice
+        // Aggiungo i nuovi label della matrice
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
                 matrixLabels[row][col] = new JLabel(" ");
@@ -75,7 +75,7 @@ public class GUI extends JFrame {
             }
         }
     
-        // Rendi visibili le modifiche
+        // Rendo visibili le modifiche
         revalidate();
         repaint();
     }
