@@ -54,9 +54,9 @@ public class TCPClient {
                         int riga = Integer.parseInt(parts[0]);
                         int colon = Integer.parseInt(parts[1]);
 
-                        SwingUtilities.invokeLater(() -> {
+                        
                             gui.disegnaCerchio(gui.matrixLabels[riga][colon], colore);
-                        });
+                       
 
                         // Ciclo per leggere i messaggi successivi
                         
@@ -67,12 +67,12 @@ public class TCPClient {
                             // Elabora il messaggio successivo, ad esempio, aggiorna l'interfaccia utente
                             System.out.println("MESSEGGIO IMPORTANTE: " + nextMessage);
                             String[] parts2 = nextMessage.split(";");
-                            int riga2 = Integer.parseInt(parts[0]);
-                            int colon2 = Integer.parseInt(parts[1]);
+                            int riga2 = Integer.parseInt(parts2[0]);
+                            int colon2 = Integer.parseInt(parts2[1]);
 
-                        SwingUtilities.invokeLater(() -> {
+                       
                             gui.disegnaCerchio(gui.matrixLabels[riga2][colon2], colore2);
-                        });
+                       
                             
                         }
                     }
