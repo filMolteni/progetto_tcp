@@ -1,0 +1,59 @@
+@startuml
+actor User1
+actor User2
+participant GUI1
+participant GUI2
+participant TCPClient1
+participant TCPClient2
+participant Server
+participant CommunicationThread1
+participant CommunicationThread2
+
+User1 -> GUI1: Interagisce con l'interfaccia grafica
+activate GUI1
+
+User1 -> GUI1: Seleziona una colonna
+GUI1 -> TCPClient1: Richiesta di comunicazione
+activate TCPClient1
+
+TCPClient1 -> Server: Richiesta di comunicazione
+activate Server
+
+Server -> CommunicationThread1: Creazione del thread
+activate CommunicationThread1
+
+CommunicationThread1 -> Server: Ricezione messaggio
+Server -> CommunicationThread1: Elaborazione del messaggio
+CommunicationThread1 -> TCPClient1: Invio risposta al client
+deactivate CommunicationThread1
+
+TCPClient1 -> GUI1: Aggiornamento dell'interfaccia
+deactivate TCPClient1
+
+GUI1 -> User1: Aggiornamento dell'interfaccia
+deactivate GUI1
+
+User2 -> GUI2: Interagisce con l'interfaccia grafica
+activate GUI2
+
+User2 -> GUI2: Seleziona una colonna
+GUI2 -> TCPClient2: Richiesta di comunicazione
+activate TCPClient2
+
+TCPClient2 -> Server: Richiesta di comunicazione
+activate Server
+
+Server -> CommunicationThread2: Creazione del thread
+activate CommunicationThread2
+
+CommunicationThread2 -> Server: Ricezione messaggio
+Server -> CommunicationThread2: Elaborazione del messaggio
+CommunicationThread2 -> TCPClient2: Invio risposta al client
+deactivate CommunicationThread2
+
+TCPClient2 -> GUI2: Aggiornamento dell'interfaccia
+deactivate TCPClient2
+
+GUI2 -> User2: Aggiornamento dell'interfaccia
+deactivate GUI2
+@enduml
