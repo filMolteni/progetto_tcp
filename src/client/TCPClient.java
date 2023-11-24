@@ -13,8 +13,8 @@ public class TCPClient {
 
     //client1
     public char pezzo = 'X';
-    Color colore = Color.RED ;
-    Color colore2 = Color.yellow ;
+    Color rosso = Color.RED ;
+    Color giallo = Color.yellow ;
     int serverPort = 12345;
 
     public GUI gui;
@@ -31,7 +31,7 @@ public class TCPClient {
                     String serverAddress = "localhost";
 
                     //Socket clientSocket = new Socket(serverAddress, serverPort);
-                    Socket clientSocket = new Socket(serverAddress, 12345);
+                    Socket clientSocket = new Socket(serverAddress, 8080);
                     OutputStream outputStream = clientSocket.getOutputStream();
                     String messageToSend = colonna + ";" + pezzo;
                     PrintWriter p = new PrintWriter(outputStream, true);
@@ -53,29 +53,16 @@ public class TCPClient {
                         String[] parts = serverMessage.split(";");
                         int riga = Integer.parseInt(parts[0]);
                         int colon = Integer.parseInt(parts[1]);
+                        String color = parts[2];
                         
                         // SwingUtilities.invokeLater(() -> {
                         // });
-                        
-                        gui.disegnaCerchio(gui.matrixLabels[riga][colon], colore);
+                        if(color.equals("rosso"))
+                        gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
+                        else 
+                        gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
                         // Ciclo per leggere i messaggi successivi
-                        
-                        String nextMessage;
-                        System.out.println("ATTESA 2");
-                        while ((nextMessage = bufferedReader.readLine() )!= null) {
-                           //if (nextMessage == null || nextMessage.isEmpty()) {break;  }
-
-                            // Elabora il messaggio successivo, ad esempio, aggiorna l'interfaccia utente
-                            System.out.println("MESSEGGIO IMPORTANTE: " + nextMessage);
-                            String[] parts2 = nextMessage.split(";");
-                            int riga2 = Integer.parseInt(parts2[0]);
-                            int colon2 = Integer.parseInt(parts2[1]);
-
-                        
-                            gui.disegnaCerchio(gui.matrixLabels[riga2][colon2], colore2);
                        
-                            
-                        }
                     }
 
                     

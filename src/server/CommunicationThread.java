@@ -9,22 +9,28 @@ import java.net.Socket;
 
 public class CommunicationThread extends Thread {
     private Socket clientSocket;
-    private int port;
+    private int turno;
     private SharedData sharedData;
-
+    PrintWriter output;
+    TCPServer s;
     
     
-    public CommunicationThread(Socket clientSocket, int port, SharedData sharedData) {
+    public CommunicationThread(Socket clientSocket, int turno, SharedData sharedData,TCPServer s) throws IOException {
             this.clientSocket = clientSocket;
-            this.port = port;
+            output = new PrintWriter(clientSocket.getOutputStream(), true);
+            this.turno = turno;
             this.sharedData = sharedData;
+            this.s=s;
+
     }
     
     
 
     @Override
     public void run() {
+        
         try {
+            
             InputStream input = clientSocket.getInputStream();
             InputStreamReader reader = new InputStreamReader(input);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -37,29 +43,32 @@ public class CommunicationThread extends Thread {
                     int colonna = Integer.parseInt(parts[0]);
                     char pezzo = parts[1].charAt(0);
 
-                    if ((port == 12345 && sharedData.currentTurn == 1) || (port == 54321 && sharedData.currentTurn == 2)) {
+                    
                         int riga = sharedData.m.getRigaInserimento(colonna);
                         if (riga >= 0) {
                             boolean isInserito = sharedData.m.inserisciPezzo(colonna, pezzo);
                             if (isInserito) {
                                 // Inviare messaggio di conferma al client
-                                PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
-                                String messaggio = Integer.toString(riga) + ";" + colonna;
-                                output.println(messaggio);
-                                output.flush();
+                            String messaggio="";
 
+                            if(sharedData.currentTurn == 1){
+                                messaggio = Integer.toString(riga) + ";" + colonna+ ";rosso";
+                                sharedData.currentTurn=2;
+                            }
+                            else{
+                                messaggio = Integer.toString(riga) + ";" + colonna+ ";giallo";
+                                sharedData.currentTurn=1;
+                              }
                               
-                                if (port == 12345) {
-                                   inviaAdAltroClient(54321, messaggio);
-                                    sharedData.currentTurn = 2; // Passa al turno del client 2
-                                } else if (port == 54321) {
-                                    inviaAdAltroClient(12345, messaggio);
-                                    sharedData.currentTurn = 1; // Passa al turno del client 1
-                                }
+                                
+                                s.notifyAllClients(messaggio);
+                                
+                              
+                                
                                 System.out.print(sharedData.currentTurn);
                             }
                         }
-                    } 
+                   
 
                     // Controlla la vittoria
                     if (sharedData.m.controllaVittoria(pezzo)) {
@@ -82,26 +91,16 @@ public class CommunicationThread extends Thread {
         
     }
     
-        
+    public void sendMessage(String message) {
+        // invio risposta
+        output.println(message);
+
+        System.out.println(
+                "Message sent to " + clientSocket.getInetAddress() + ":" + clientSocket.getPort() + " : " + message);
+        // System.out.println("Message sent : " + message);
+        System.out.println("-------------------------");
+    }
     
-        private void inviaAdAltroClient(int destinazionePort, String messaggio) {
-            CommunicationThread altroThread = sharedData.threadMap.get(Thread.currentThread().getName());
-            if (altroThread != null) {
-                altroThread.inviaMessaggio(destinazionePort, messaggio);
-            }
-        }
-    
-        private void inviaMessaggio(int destinazionePort, String messaggio) {
-            try {
-                Socket socketDestinazione = new Socket("localhost", destinazionePort);
-                PrintWriter outputDestinazione = new PrintWriter(socketDestinazione.getOutputStream(), true);
-                outputDestinazione.println(messaggio);
-                outputDestinazione.flush();
-                socketDestinazione.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     
     
     
