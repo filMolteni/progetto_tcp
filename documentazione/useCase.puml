@@ -1,26 +1,32 @@
 @startuml
-
 left to right direction
 
-actor Player1
-actor Player2
-actor Server
-actor GUI
+actor "Player 1" as P1
+actor "Player 2" as P2
+actor GUI as G
 
-Player1 --> (Seleziona Colonna)
-Player1 --> (Visualizza Vittoria)
+rectangle Client {
+    usecase "Seleziona Colonna" as C_UC1 #YellowGreen
+    usecase "Visualizza Vittoria" as C_UC2 #YellowGreen
+}
 
-Player2 --> (Seleziona Colonna)
-Player2 --> (Visualizza Vittoria)
+P1 --> C_UC1
+P1 --> C_UC2
 
-(GUI --> (Visualizza Griglia))
-(GUI --> (Visualizza Vittoria))
+P2 --> C_UC1
+P2 --> C_UC2
 
-Player1 --> (Invia Mossa)
-Player2 --> (Invia Mossa)
+G --> C_UC1
+G --> C_UC2
 
-(Invia Mossa) --> (Elabora Mossa)
-(Elabora Mossa) --> (Aggiorna Griglia)
-(Aggiorna Griglia) --> (Comunica Vittoria)
+rectangle TCPClient {
+    usecase "Invia Mossa/Elabora Mossa" as S_UC1 #GreenYellow
+    usecase "Aggiorna Griglia" as S_UC2 #GreenYellow
+    usecase "Comunica Vittoria" as S_UC3 #GreenYellow
+}
+
+C_UC1 <--> S_UC1
+C_UC2 <--> S_UC2
+C_UC2 <--> S_UC3
 
 @enduml

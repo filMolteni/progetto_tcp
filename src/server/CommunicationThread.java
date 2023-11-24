@@ -50,10 +50,10 @@ public class CommunicationThread extends Thread {
 
                               
                                 if (port == 12345) {
-                                    //inviaAdaltroClient(54321, messaggio);
+                                   inviaAdAltroClient(54321, messaggio);
                                     sharedData.currentTurn = 2; // Passa al turno del client 2
                                 } else if (port == 54321) {
-                                    //inviaAdaltroClient(12345, messaggio);
+                                    inviaAdAltroClient(12345, messaggio);
                                     sharedData.currentTurn = 1; // Passa al turno del client 1
                                 }
                                 System.out.print(sharedData.currentTurn);
@@ -81,6 +81,29 @@ public class CommunicationThread extends Thread {
         }
         
     }
-
+    
+        
+    
+        private void inviaAdAltroClient(int destinazionePort, String messaggio) {
+            CommunicationThread altroThread = sharedData.threadMap.get(Thread.currentThread().getName());
+            if (altroThread != null) {
+                altroThread.inviaMessaggio(destinazionePort, messaggio);
+            }
+        }
+    
+        private void inviaMessaggio(int destinazionePort, String messaggio) {
+            try {
+                Socket socketDestinazione = new Socket("localhost", destinazionePort);
+                PrintWriter outputDestinazione = new PrintWriter(socketDestinazione.getOutputStream(), true);
+                outputDestinazione.println(messaggio);
+                outputDestinazione.flush();
+                socketDestinazione.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    
+    
+    
     
 }
