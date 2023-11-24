@@ -50,18 +50,26 @@ public class CommunicationThread extends Thread {
                             if (isInserito) {
                                 // Inviare messaggio di conferma al client
                             String messaggio="";
-
-                            if(sharedData.currentTurn == 1){
-                                messaggio = Integer.toString(riga) + ";" + colonna+ ";rosso";
-                                sharedData.currentTurn=2;
+                            String isVittoria=".";
+                             if (sharedData.m.controllaVittoria(pezzo)) {
+                                isVittoria ="vittoria"+pezzo;
+                              
                             }
-                            else{
-                                messaggio = Integer.toString(riga) + ";" + colonna+ ";giallo";
+                            if(sharedData.currentTurn == 1 && pezzo == 'X'){
+                                messaggio = Integer.toString(riga) + ";" + colonna+ ";rosso;"+ isVittoria;
+                                sharedData.currentTurn=2;
+                                 s.notifyAllClients(messaggio);
+                            }
+                            else if(sharedData.currentTurn == 2 && pezzo == 'O'){
+                                messaggio = Integer.toString(riga) + ";" + colonna+ ";giallo;"+ isVittoria;
                                 sharedData.currentTurn=1;
-                              }
+                                 s.notifyAllClients(messaggio);
+                            }else{
+                                sharedData.m.setCella(riga, colonna, ' ');
+                            }
                               
                                 
-                                s.notifyAllClients(messaggio);
+                               
                                 
                               
                                 
@@ -71,10 +79,7 @@ public class CommunicationThread extends Thread {
                    
 
                     // Controlla la vittoria
-                    if (sharedData.m.controllaVittoria(pezzo)) {
-                        System.out.print("Vittoria");
-                        break;
-                    }
+                   
                 }
             }
         } catch (IOException e) {

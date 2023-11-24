@@ -15,6 +15,7 @@ public class TCPClient {
     Color rosso = Color.RED ;
     Color giallo = Color.yellow ;
     int serverPort = 12345;
+    boolean victory=false;
 
     public GUI gui;
     public TCPClient(GUI gui) {
@@ -27,43 +28,51 @@ public class TCPClient {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    String serverAddress = "localhost";
+                    if(victory == false){
+                        String serverAddress = "localhost";
 
-                    //Socket clientSocket = new Socket(serverAddress, serverPort);
-                    Socket clientSocket = new Socket(serverAddress, 8080);
-                    OutputStream outputStream = clientSocket.getOutputStream();
-                    String messageToSend = colonna + ";" + pezzo;
-                    PrintWriter p = new PrintWriter(outputStream, true);
+                        //Socket clientSocket = new Socket(serverAddress, serverPort);
+                        Socket clientSocket = new Socket(serverAddress, 8080);
+                        OutputStream outputStream = clientSocket.getOutputStream();
+                        String messageToSend = colonna + ";" + pezzo;
+                        PrintWriter p = new PrintWriter(outputStream, true);
 
-                    p.println(messageToSend);
+                        p.println(messageToSend);
 
-                    InputStream input = clientSocket.getInputStream();
-                    InputStreamReader reader = new InputStreamReader(input);
-                    BufferedReader bufferedReader = new BufferedReader(reader);
+                        InputStream input = clientSocket.getInputStream();
+                        InputStreamReader reader = new InputStreamReader(input);
+                        BufferedReader bufferedReader = new BufferedReader(reader);
 
-                    while (true) {
-                        String serverMessage = bufferedReader.readLine();
-                        if (serverMessage == null) {
-                            // Il server ha chiuso la connessione
-                            break;
-                        }
-                        System.out.println("CLIENT 1:Received message from server: " + serverMessage);
+                        while (true) {
+                            String serverMessage = bufferedReader.readLine();
+                            if (serverMessage == null) {
+                                // Il server ha chiuso la connessione
+                                break;
+                            }
+                            System.out.println("CLIENT 1:Received message from server: " + serverMessage);
 
-                        String[] parts = serverMessage.split(";");
-                        int riga = Integer.parseInt(parts[0]);
-                        int colon = Integer.parseInt(parts[1]);
-                        String color = parts[2];
+                            String[] parts = serverMessage.split(";");
+                            int riga = Integer.parseInt(parts[0]);
+                            int colon = Integer.parseInt(parts[1]);
+                            String color = parts[2];
+                            String vittoria = parts[3];
+                            // SwingUtilities.invokeLater(() -> {
+                            // });
+                            if(color.equals("rosso"))
+                            gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
+                            else 
+                            gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
+                            // Ciclo per leggere i messaggi successivi
                         
-                        // SwingUtilities.invokeLater(() -> {
-                        // });
-                        if(color.equals("rosso"))
-                        gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
-                        else 
-                        gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
-                        // Ciclo per leggere i messaggi successivi
-                       
+                            if(vittoria.equals("vittoriaX")){
+                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
+                                victory = true;
+                            }else if(vittoria.equals("vittoriaO")){
+                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
+                                victory = true;
+                            }
+                        }
                     }
-
                     
                     // clientSocket.close();
                 } catch (IOException e) {

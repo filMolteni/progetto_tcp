@@ -98,5 +98,9 @@ public class CMatrice {
         }
         return -1; // La colonna è piena
     }
-
+    public void setCella(int riga, int colonna, char valore) {
+        if (riga >= 0 && riga < righe && colonna >= 0 && colonna < colonne) {
+            tavola[riga][colonna] = valore;
+        }
+    }
 }
