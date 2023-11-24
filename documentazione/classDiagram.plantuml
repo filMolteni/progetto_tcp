@@ -19,6 +19,8 @@ class SharedData {
   - threadMap: Map<String, CommunicationThread>
 
   + SharedData()
+  + switchTurn(): void
+  + getCurrentTurn(): int
 }
 
 class CommunicationThread {
@@ -28,37 +30,30 @@ class CommunicationThread {
 
   + CommunicationThread(clientSocket: Socket, port: int, sharedData: SharedData)
   + run(): void
+  + sendMessage(message: String): void
 }
 
 class TCPServer {
   - sharedData: SharedData
+  - clients: List<CommunicationThread>
 
   + main(args: String[]): void
-  + startCommunicationThread(threadName: String, port: int): void
+  + startServer(port: int): void
+  + startCommunicationThread(threadName: String, turno: int): void
+  + notifyAllClients(message: String): void
+  + stopServer(): void
 }
 
 class TCPClient {
   - pezzo: char
-  - colore: Color
-  - colore2: Color
+  - rosso: Color
+  - giallo: Color
   - serverPort: int
   - gui: GUI
 
   + TCPClient(gui: GUI)
   + comunicazioneServer(colonna: int): void
-}
-
-class GUI {
-  - columnButtons: JButton[]
-  - matrixLabels: JLabel[][]
-  - tcpClient: TCPClient
-
-  + GUI(tcpClient: TCPClient)
-  + GUI()
-  + disegnaMatrice(): void
-  + ridisegnaMatrice(matrix: char[][]): void
-  + disegnaCerchio(label: JLabel, colore: Color): void
-  + setTCPClient(tcpClient: TCPClient): void
+  + main(args: String[]): void
 }
 
 GUI --> TCPClient
@@ -71,8 +66,8 @@ CommunicationThread --> IOException
 
 class TCPClient2 {
   - pezzo: char
-  - colore: Color
-  - colore2: Color
+  - rosso: Color
+  - giallo: Color
   - serverPort: int
   - gui: GUI
 

@@ -29,7 +29,7 @@ public class TCPClient {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    if(victory == false){
+                    if(victory == false){ 
                         String serverAddress = "localhost";
 
                         //Socket clientSocket = new Socket(serverAddress, serverPort);

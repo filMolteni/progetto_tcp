@@ -84,14 +84,18 @@ public class TCPClient {
 
         worker.execute();
     }
-    
+    public void simulaPressioneBottone() {
+        // Simula la pressione del bottone una sola volta all'avvio
+        int colonna = 0; // Sostituisci con la colonna desiderata
+        comunicazioneServer(colonna);
+    }
     public static void main(String[] args) {
         GUI gui = new GUI();
         TCPClient tcpClient = new TCPClient(gui);
         gui.setTCPClient(tcpClient);
-
+    
         SwingUtilities.invokeLater(() -> {
-            //new GUI();
+            tcpClient.simulaPressioneBottone();
         });
     }
 

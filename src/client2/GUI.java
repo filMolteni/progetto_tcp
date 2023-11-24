@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import javax.swing.border.LineBorder;
 
 public class GUI extends JFrame {
     private JButton[] columnButtons;
@@ -13,7 +13,6 @@ public class GUI extends JFrame {
 
     public GUI(TCPClient tcpClient) {
         this.tcpClient = tcpClient;
-       
     }
 
     public GUI() {
@@ -50,10 +49,13 @@ public class GUI extends JFrame {
                 matrixLabels[row][col] = new JLabel(" ");
                 matrixLabels[row][col].setHorizontalAlignment(SwingConstants.CENTER);
                 matrixLabels[row][col].setFont(new Font("Arial", Font.BOLD, 24));
+                
+                // Imposta un bordo vuoto per separare le celle
+                matrixLabels[row][col].setBorder(new LineBorder(Color.BLACK));
+                
                 add(matrixLabels[row][col]);
             }
         }
-
     }
 
     public void ridisegnaMatrice() {
