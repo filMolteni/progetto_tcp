@@ -1,50 +1,43 @@
-# Forza 4
+# Forza 4 Multiplayer Game
 
-Forza 4 è una versione del popolare gioco da tavolo "Connect Four" implementata in Java con l'utilizzo di Socket per consentire la connessione tra un server e due client.
+## Descrizione
+Questo progetto implementa una versione multiplayer del gioco Forza 4 utilizzando una connessione TCP tra client e server.
+
+## Struttura del Progetto
+
+### Client
+Il modulo client gestisce l'interfaccia grafica del gioco e la comunicazione con il server utilizzando la classe `TCPClient`.
+
+#### File
+- `GUI.java`: Implementa l'interfaccia grafica del gioco.
+- `TCPClient.java`: Gestisce la connessione TCP lato client.
+
+### Server
+Il modulo server gestisce la logica di gioco, la comunicazione con i client e la gestione della partita utilizzando la classe `TCPServer`.
+
+#### File
+- `CMatrice.java`: Rappresenta la matrice di gioco e contiene la logica di controllo della vittoria.
+- `CommunicationThread.java`: Thread di comunicazione con un client.
+- `TCPServer.java`: Gestisce la connessione TCP lato server.
 
 ## Istruzioni per l'esecuzione
 
-### Server
+1. **Esecuzione del Server:**
+   - Esegui il file `main.java` per avviare il server sulla porta specificata.
 
-1. Apri il terminale.
-2. Naviga nella directory del server (`/path/to/Forza4/server`).
-3. Compila il server eseguendo il comando: `javac TCPServer.java`.
-4. Avvia il server con il comando: `java TCPServer`.
+2. **Esecuzione del Client:**
+   - Esegui il file `TCPClient.java` per avviare un client.
+   - La GUI del gioco si aprirà, e sarà possibile interagire con essa.
 
-### Client
+3. **Regole del Gioco:**
+   - I giocatori si alternano per inserire i loro pezzi nella colonna desiderata.
+   - Il gioco verifica la condizione di vittoria in base alle regole del Forza 4.
 
-1. Apri due terminali separati per ogni client.
-2. Naviga nella directory del client (`/path/to/Forza4/client`).
-3. Compila il client eseguendo il comando: `javac TCPClient.java`.
-4. Avvia il client con il comando: `java TCPClient`.
+## Note
+Assicurati di avere Java installato sulla tua macchina per eseguire correttamente il progetto.
 
-## Come giocare
-
-1. Avvia il server e i due client.
-2. I client possono connettersi al server e interagire con il gioco.
-3. I giocatori si alternano a fare mosse inserendo un pezzo (cerchio o croce) in una colonna.
-4. Vince il giocatore che riesce a formare una fila di quattro pezzi consecutivi nella stessa direzione (orizzontale, verticale o diagonale).
-
-## Struttura del progetto
-
-- `server/`: Contiene il codice sorgente del server.
-  - `TCPServer.java`: Implementazione del server che gestisce la comunicazione tra i client.
-  - `CommunicationThread.java`: Thread per gestire la comunicazione con un singolo client.
-  - `CMatrice.java`: Classe che rappresenta la matrice di gioco e le regole del Forza 4.
-  - `SharedData.java`: Contiene dati condivisi tra i thread.
-  
-- `client/`: Contiene il codice sorgente del client.
-  - `TCPClient.java`: Implementazione del client che comunica con il server.
-  - `GUI.java`: Interfaccia grafica del gioco.
-
-## Dipendenze
-
-Il progetto non richiede librerie esterne. Assicurati di eseguire il codice su un ambiente Java compatibile.
-
-## Contributi
-
-I contributi sono benvenuti! Sentiti libero di aprire issue o pull request.
+## Autore
+Nome Cognome
 
 ## Licenza
-
-Questo progetto è distribuito con la licenza [MIT](LICENSE).
+Questo progetto è distribuito con licenza MIT. Consulta il file LICENSE per ulteriori dettagli.

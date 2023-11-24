@@ -11,33 +11,38 @@ import java.net.Socket;
 
 public class TCPClient {
 
-    //client1
+    // Dichiarazione di variabili di istanza
     public char pezzo = 'X';
-    Color rosso = Color.RED ;
-    Color giallo = Color.yellow ;
-    int serverPort = 12345;
-    boolean victory=false;
+    Color rosso = Color.RED;
+    Color giallo = Color.yellow;
+    boolean victory = false;
 
+    // Riferimento alla GUI associata a questo client
     public GUI gui;
+
+    // Costruttore con parametro GUI
     public TCPClient(GUI gui) {
         this.gui = gui;
-       
     }
 
+    // Metodo per la comunicazione con il server
     public void comunicazioneServer(int colonna) {
+        // Utilizzo di un SwingWorker per eseguire operazioni asincrone
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    if(victory == false){ 
+                    // Verifica della condizione di vittoria
+                    if (victory == false) {
                         String serverAddress = "localhost";
 
-                        //Socket clientSocket = new Socket(serverAddress, serverPort);
+                        // Creazione di una connessione socket con il server
                         Socket clientSocket = new Socket(serverAddress, 8080);
                         OutputStream outputStream = clientSocket.getOutputStream();
                         String messageToSend = colonna + ";" + pezzo;
                         PrintWriter p = new PrintWriter(outputStream, true);
 
+                        // Invio del messaggio al server
                         p.println(messageToSend);
 
                         InputStream input = clientSocket.getInputStream();
@@ -45,6 +50,7 @@ public class TCPClient {
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         while (true) {
+                            // Lettura del messaggio dal server
                             String serverMessage = bufferedReader.readLine();
                             if (serverMessage == null) {
                                 // Il server ha chiuso la connessione
@@ -52,29 +58,31 @@ public class TCPClient {
                             }
                             System.out.println("CLIENT 1:Received message from server: " + serverMessage);
 
+                            // Parsing del messaggio ricevuto
                             String[] parts = serverMessage.split(";");
                             int riga = Integer.parseInt(parts[0]);
                             int colon = Integer.parseInt(parts[1]);
                             String color = parts[2];
                             String vittoria = parts[3];
-                            // SwingUtilities.invokeLater(() -> {
-                            // });
-                            if(color.equals("rosso"))
-                            gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
-                            else 
-                            gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
-                            // Ciclo per leggere i messaggi successivi
-                        
-                            if(vittoria.equals("vittoriaX")){
+
+                            // Aggiornamento della GUI in base al colore ricevuto
+                            if (color.equals("rosso"))
+                                gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
+                            else
+                                gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
+
+                            // Verifica della condizione di vittoria
+                            if (vittoria.equals("vittoriaX")) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
                                 victory = true;
-                            }else if(vittoria.equals("vittoriaO")){
+                            } else if (vittoria.equals("vittoriaO")) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
                                 victory = true;
                             }
                         }
                     }
-                    
+
+                    // Chiusura della connessione socket
                     // clientSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -83,19 +91,20 @@ public class TCPClient {
             }
         };
 
+        // Esecuzione del worker
         worker.execute();
     }
-    
+
+    // Metodo principale
     public static void main(String[] args) {
         GUI gui = new GUI();
         TCPClient tcpClient = new TCPClient(gui);
         gui.setTCPClient(tcpClient);
 
+        // Esecuzione dell'applicazione GUI
         SwingUtilities.invokeLater(() -> {
-            //new GUI();
+            // new GUI();
         });
     }
-
-
-
 }
+
