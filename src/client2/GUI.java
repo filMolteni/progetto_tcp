@@ -48,6 +48,8 @@ public class GUI extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+        getContentPane().setBackground(Color.BLUE);
     }
 
     // Metodo per disegnare la matrice di JLabel
