@@ -76,7 +76,7 @@ public class TCPClient {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
                                 victory = true;
                             } else if (vittoria.equals("vittoriaO")) {
-                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
+                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio giallo!");
                                 victory = true;
                             }
                         }

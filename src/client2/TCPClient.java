@@ -71,9 +71,12 @@ public class TCPClient {
                             else
                                 gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
 
-                            // Controlla la condizione di vittoria
-                            if (vittoria.equals("vittoriaX") || vittoria.equals("vittoriaO")) {
-                                JOptionPane.showMessageDialog(gui, "Il cerchio rosso ha vinto!");
+                            // Verifica della condizione di vittoria
+                            if (vittoria.equals("vittoriaX")) {
+                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
+                                victory = true;
+                            } else if (vittoria.equals("vittoriaO")) {
+                                JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio giallo!");
                                 victory = true;
                             }
                         }
