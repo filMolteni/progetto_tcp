@@ -95,9 +95,12 @@ public class GUI extends JFrame {
 
     // Metodo per disegnare un cerchio di un dato colore in una JLabel
     public void disegnaCerchio(JLabel label, Color colore) {
+        Font nuovoFont = new Font("Nome del Font", Font.BOLD, 40);
         label.setForeground(colore);
+        label.setFont(nuovoFont);
         label.setText("●");
     }
+    
 
     // Metodo per impostare il TCPClient associato
     public void setTCPClient(TCPClient tcpClient2) {

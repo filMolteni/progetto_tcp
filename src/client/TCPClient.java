@@ -27,63 +27,63 @@ public class TCPClient {
 
     // Metodo per la comunicazione con il server
     public void comunicazioneServer(int colonna) {
-        // Utilizzo di un SwingWorker per eseguire operazioni asincrone
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 try {
-                    // Verifica della condizione di vittoria
+                    // Verifica che il client non abbia ancora vinto
                     if (victory == false) {
                         String serverAddress = "localhost";
 
-                        // Creazione di una connessione socket con il server
+                        // Crea una connessione TCP con il server
                         Socket clientSocket = new Socket(serverAddress, 8080);
                         OutputStream outputStream = clientSocket.getOutputStream();
                         String messageToSend = colonna + ";" + pezzo;
                         PrintWriter p = new PrintWriter(outputStream, true);
 
-                        // Invio del messaggio al server
+                        // Invia il messaggio al server
                         p.println(messageToSend);
 
                         InputStream input = clientSocket.getInputStream();
                         InputStreamReader reader = new InputStreamReader(input);
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
-                        while (true) {
-                            // Lettura del messaggio dal server
+                        // Attende i messaggi dal server
+                        while (victory==false) {
                             String serverMessage = bufferedReader.readLine();
                             if (serverMessage == null) {
                                 // Il server ha chiuso la connessione
                                 break;
                             }
-                            System.out.println("CLIENT 1:Received message from server: " + serverMessage);
+                            System.out.println("CLIENT: Received message from server: " + serverMessage);
 
-                            // Parsing del messaggio ricevuto
                             String[] parts = serverMessage.split(";");
                             int riga = Integer.parseInt(parts[0]);
                             int colon = Integer.parseInt(parts[1]);
                             String color = parts[2];
                             String vittoria = parts[3];
 
-                            // Aggiornamento della GUI in base al colore ricevuto
+                            // Aggiorna la GUI in base al messaggio ricevuto
                             if (color.equals("rosso"))
                                 gui.disegnaCerchio(gui.matrixLabels[riga][colon], rosso);
                             else
                                 gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
 
                             // Verifica della condizione di vittoria
-                            if (vittoria.equals("vittoriaX")) {
+                            if (vittoria.equals("vittoriaX")&& victory==false) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
                                 victory = true;
-                            } else if (vittoria.equals("vittoriaO")) {
+                               
+                               
+                            } else if (vittoria.equals("vittoriaO")&& victory==false) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio giallo!");
                                 victory = true;
+                               
+                               
                             }
                         }
                     }
 
-                    // Chiusura della connessione socket
-                    // clientSocket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -91,9 +91,9 @@ public class TCPClient {
             }
         };
 
-        // Esecuzione del worker
         worker.execute();
     }
+    
 
     // Metodo principale
     public static void main(String[] args) {

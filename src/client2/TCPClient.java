@@ -51,7 +51,7 @@ public class TCPClient {
                         BufferedReader bufferedReader = new BufferedReader(reader);
 
                         // Attende i messaggi dal server
-                        while (true) {
+                        while (victory==false) {
                             String serverMessage = bufferedReader.readLine();
                             if (serverMessage == null) {
                                 // Il server ha chiuso la connessione
@@ -72,12 +72,16 @@ public class TCPClient {
                                 gui.disegnaCerchio(gui.matrixLabels[riga][colon], giallo);
 
                             // Verifica della condizione di vittoria
-                            if (vittoria.equals("vittoriaX")) {
+                            if (vittoria.equals("vittoriaX")&& victory==false) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio rosso!");
                                 victory = true;
-                            } else if (vittoria.equals("vittoriaO")) {
+                               
+                               
+                            } else if (vittoria.equals("vittoriaO")&& victory==false) {
                                 JOptionPane.showMessageDialog(gui, "Ha vinto il cerchio giallo!");
                                 victory = true;
+                               
+                               
                             }
                         }
                     }
