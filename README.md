@@ -37,7 +37,7 @@ Il modulo server gestisce la logica di gioco, la comunicazione con i client e la
 Assicurati di avere Java installato sulla tua macchina per eseguire correttamente il progetto.
 
 ## Autore
-Nome Cognome
+Filippo Molteni
 
 ## Licenza
 Questo progetto è distribuito con licenza MIT. Consulta il file LICENSE per ulteriori dettagli.
